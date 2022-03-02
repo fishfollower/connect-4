@@ -78,8 +78,6 @@ function mousePressed() {
       notFound = false;
     }
   }
-
-  //board[cellX][cellY] = activeColor;
   if(activeColor == 1) { activeColor = 2}
   else { activeColor = 1}
   isDraw();
