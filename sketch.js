@@ -6,8 +6,10 @@ let boardWidth = 400;
 let boardSize = 10;
 let board = makeArr2D(boardSize,boardSize);
 let activeColor = 1;
+let b;
 
 function setup() {
+  b = scanColForPos() * boardSize + (boardSize/2)
   createCanvas(boardWidth,boardHeight);
   console.log(board);
   for(let i = 0; i < boardSize ; i++) {
@@ -100,9 +102,45 @@ function isDraw() {
   } 
 } 
 
+let pos1 = 0;
+let pos2 = 0;
+let posy = 0;
+
 function hoverSel() {
-  let cellX = round(mouseX / boxSize - 0.5);
+  b = scanColForPos() * boardSize *4 + boardSize*2
+  qf = [mouseX, 380]
+  let fixedCellX = round(min(qf) / boxSize - 0.5);
+  if (fixedCellX > 9) {
+    fixedCellX = 9
+  }
+  let cellX =fixedCellX
+  print(cellX)
   stroke(0,255,0)
-  line(cellX * boardSize*4, 0, cellX*boardSize*4,boardHeight);
-  line((cellX+1) * boardSize*4, 0, (cellX+1)*boardSize*4,boardHeight);
+  let target1 = cellX * boardSize*4
+  let target2 = (cellX+1) * boardSize*4
+  pos1 += (target1 - pos1) / 5
+  pos2 += (target2 - pos2) / 5
+  posy += (b - posy) / 5
+
+  line(pos1, 0, pos1,boardHeight);
+  line(pos2, 0, pos2,boardHeight);
+  noStroke();
+  fill(0,255,0)
+  circle(pos1 +boardSize*2, posy,boardSize*2)
+  if(posy == "NaN") { posy = 1}
+}
+
+function scanColForPos() {
+  boxSize = boardWidth / boardSize;
+  let cellX = round(mouseX / boxSize - 0.5);
+  let notFound = true;
+
+  for(let i = boardSize-1; i >= 0 && notFound; i--) {
+    if(board[cellX][i] == 0) {
+      //board[cellX][i] = activeColor;
+      notFound = false;
+        return i;
+    }
+  }
+  return -1;
 }
