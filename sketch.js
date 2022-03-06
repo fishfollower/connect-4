@@ -29,7 +29,7 @@ function makeGrid(num) {
   if(activeColor == 1) {
     stroke(255,0,0);
   } else {
-    stroke(255,255,0);
+    stroke(0,0,255);
   }
   for(let i = 0; i < boardWidth+1; i += boxSizeX) {
     strokeWeight(5);
@@ -63,7 +63,7 @@ function drawGrid(num) {
       noStroke();
       if(board[i][j]) {
         if(board[i][j] == 1) { fill(255,0,0); }
-        if(board[i][j] == 2) { fill(255,255,0); }
+        if(board[i][j] == 2) { fill(0,0,255); }
         circle(i*boxSize+boxSize/2,j*boxSize+boxSize/2,boxSize-20);
       }
     }
@@ -103,4 +103,6 @@ function isDraw() {
 function hoverSel() {
   let cellX = round(mouseX / boxSize - 0.5);
   stroke(0,255,0)
+  line(cellX * boardSize*4, 0, cellX*boardSize*4,boardHeight);
+  line((cellX+1) * boardSize*4, 0, (cellX+1)*boardSize*4,boardHeight);
 }
