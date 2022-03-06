@@ -1,14 +1,17 @@
+///<reference path="p5.d.ts" />
+
 
 let boardHeight = 400;
 let boardWidth = 400;
-let board = makeArr2D(7,7);
+let boardSize = 10;
+let board = makeArr2D(boardSize,boardSize);
 let activeColor = 1;
 
 function setup() {
   createCanvas(boardWidth,boardHeight);
   console.log(board);
-  for(let i = 0; i < 7 ; i++) {
-    for(let j = 0; j < 7 ; j++) {
+  for(let i = 0; i < boardSize ; i++) {
+    for(let j = 0; j < boardSize ; j++) {
       board[i][j] = 0;
     }
   }  
@@ -16,8 +19,9 @@ function setup() {
 
 function draw() {
   background(51);
-  makeGrid(7);
-  drawGrid(7);
+  makeGrid(boardSize);
+  drawGrid(boardSize);
+  hoverSel();
 }
 
 function makeGrid(num) {
@@ -27,12 +31,12 @@ function makeGrid(num) {
   } else {
     stroke(255,255,0);
   }
-  for(let i = 0; i <= boardWidth; i += boxSizeX) {
+  for(let i = 0; i < boardWidth+1; i += boxSizeX) {
     strokeWeight(5);
     line(i, 0, i, boardHeight);
   }
   boxSizeY = boardHeight / num;
-  for(let i = 0; i <= boardHeight; i += boxSizeY) {
+  for(let i = 0; i < boardHeight+1; i += boxSizeY) {
     strokeWeight(5);
     line(0, i, boardWidth,i);
   }
@@ -67,12 +71,11 @@ function drawGrid(num) {
 }
 
 function mousePressed() {
-  boxSize = boardWidth / 7;
+  boxSize = boardWidth / boardSize;
   let cellX = round(mouseX / boxSize - 0.5);
-  let cellY = round(mouseY / boxSize - 0.5);
   let notFound = true;
 
-  for(let i = 6; i >= 0 && notFound; i--) {
+  for(let i = boardSize-1; i >= 0 && notFound; i--) {
     if(board[cellX][i] == 0) {
       board[cellX][i] = activeColor;
       notFound = false;
@@ -86,13 +89,18 @@ function mousePressed() {
 
 function isDraw() {
   let count = 0;
-  for(let i = 0; i < 7 ; i++) {
-    for(let j = 0; j < 7 ; j++) {
+  for(let i = 0; i < boardSize ; i++) {
+    for(let j = 0; j < boardSize ; j++) {
       if(board[i][j] >= 1)
       count++;
     }
   }  
-  if(count == 7*7) {
+  if(count == boardSize*boardSize) {
     createP("DRAW!!!");
   } 
 } 
+
+function hoverSel() {
+  let cellX = round(mouseX / boxSize - 0.5);
+  stroke(0,255,0)
+}
