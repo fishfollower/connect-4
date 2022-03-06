@@ -76,11 +76,12 @@ function mousePressed() {
     if(board[cellX][i] == 0) {
       board[cellX][i] = activeColor;
       notFound = false;
+      if(activeColor == 1) { activeColor = 2}
+      else { activeColor = 1}
+      isDraw();
     }
   }
-  if(activeColor == 1) { activeColor = 2}
-  else { activeColor = 1}
-  isDraw();
+  
 }
 
 function isDraw() {
@@ -93,5 +94,5 @@ function isDraw() {
   }  
   if(count == 7*7) {
     createP("DRAW!!!");
-  }
-}
+  } 
+} 
