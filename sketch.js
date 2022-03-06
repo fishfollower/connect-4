@@ -74,7 +74,7 @@ function drawGrid(num) {
 
 function mousePressed() {
   boxSize = boardWidth / boardSize;
-  let cellX = round(mouseX / boxSize - 0.5);
+  let cellX = round(constrain(mouseX,1,boardWidth-1) / boxSize - 0.5);
   let notFound = true;
 
   for(let i = boardSize-1; i >= 0 && notFound; i--) {
@@ -108,31 +108,26 @@ let posy = 0;
 
 function hoverSel() {
   b = scanColForPos() * boardSize *4 + boardSize*2
-  qf = [mouseX, 380]
-  let fixedCellX = round(min(qf) / boxSize - 0.5);
-  if (fixedCellX > 9) {
-    fixedCellX = 9
-  }
-  let cellX =fixedCellX
-  print(cellX)
-  stroke(0,255,0)
+  let cellX = round(constrain(mouseX,1,boardWidth-1) / boxSize - 0.5);
+  print(boxSize)
+  stroke(0,255,0,150)
   let target1 = cellX * boardSize*4
   let target2 = (cellX+1) * boardSize*4
   pos1 += (target1 - pos1) / 5
   pos2 += (target2 - pos2) / 5
   posy += (b - posy) / 5
-
+  strokeWeight(5)
   line(pos1, 0, pos1,boardHeight);
   line(pos2, 0, pos2,boardHeight);
   noStroke();
-  fill(0,255,0)
+  fill(0,255,0,150)
   circle(pos1 +boardSize*2, posy,boardSize*2)
   if(posy == "NaN") { posy = 1}
 }
 
 function scanColForPos() {
   boxSize = boardWidth / boardSize;
-  let cellX = round(mouseX / boxSize - 0.5);
+  let cellX = round(constrain(mouseX,1,boardWidth-1) / boxSize - 0.5);
   let notFound = true;
 
   for(let i = boardSize-1; i >= 0 && notFound; i--) {
