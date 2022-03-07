@@ -5,7 +5,7 @@ let animationSlider;
 
 let boardHeight = 400;
 let boardWidth = 400;
-let boardSize = 10;
+let boardSize = 7;
 let board = makeArr2D(boardSize,boardSize);
 let activeColor = 1;
 let b;
@@ -158,35 +158,35 @@ function hasWon(_activeColor, _posX, _posY, _arr) {
   let checksul = [];
   let checksur = [];
   for(let i = -3; i <= 3; i++) {
-    checksud.push(_arr[_posX][_posY+i])
-    checksrl.push(_arr[_posX+i][_posY])
-    checksul.push(_arr[_posX+i][_posY+i])
-    checksur.push(_arr[_posX+i][_posY-i])
+    if(_posX < boardSize && _posX > 0 && _posY+i < boardSize && _posY+i > 0) {checksud.push(_arr[_posX][_posY+i])}
+    if(_posX+i < boardSize && _posX+i > 0 && _posY < boardSize && _posY > 0) {checksrl.push(_arr[_posX+i][_posY])}
+    if(_posX+i < boardSize && _posX+i > 0 && _posY+i < boardSize && _posY+i > 0) {checksul.push(_arr[_posX+i][_posY+i])}
+    if(_posX+i < boardSize && _posX+i > 0 && _posY-i < boardSize && _posY-i > 0) {checksur.push(_arr[_posX+i][_posY-i])}
   }
   print(checksud,checksrl,checksul,checksur)
 
-  let counterud = 1;
+  let counterud = 0;
   for(let i =0 ; i < checksud.length ; i++) {
     if(checksud[i] == _activeColor) {counterud++} 
     else {counterud = 0;}
     if(counterud > 3) { hasWon = true}
   }
 
-  let counterrl = 1;
+  let counterrl = 0;
   for(let i =0 ; i < checksrl.length ; i++) {
     if(checksrl[i] == _activeColor) {counterrl++} 
     else {counterrl = 0;}
     if(counterrl > 3) { hasWon = true}
   }
 
-  let counterul = 1;
+  let counterul = 0;
   for(let i =0 ; i < checksul.length ; i++) {
     if(checksul[i] == _activeColor) {counterul++} 
     else {counterul = 0;}
     if(counterul > 3) { hasWon = true}
   }
 
-  let counterur = 1;
+  let counterur = 0;
   for(let i =0 ; i < checksur.length ; i++) {
     if(checksur[i] == _activeColor) {counterur++} 
     else {counterur = 0;}
