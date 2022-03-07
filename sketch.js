@@ -5,7 +5,7 @@ let animationSlider;
 
 let boardHeight = 400;
 let boardWidth = 400;
-let boardSize = 5;
+let boardSize = 10;
 let board = makeArr2D(boardSize,boardSize);
 let activeColor = 1;
 let b;
