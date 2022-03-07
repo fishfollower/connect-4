@@ -5,7 +5,7 @@ let animationSlider;
 
 let boardHeight = 400;
 let boardWidth = 400;
-let boardSize = 15;
+let boardSize = 5;
 let board = makeArr2D(boardSize,boardSize);
 let activeColor = 1;
 let b;
@@ -15,6 +15,8 @@ function setup() {
   gridSlider.position(boardHeight+20,0)
   marginSlider = createSlider(1,20,15)
   marginSlider.position(boardHeight+20,40)
+  animationSlider = createSlider(1,7,5)
+  animationSlider.position(boardHeight+20,80)
   b = scanColForPos() * boardSize + (boardSize/2)
   createCanvas(boardWidth,boardHeight);
   console.log(board);
@@ -120,9 +122,9 @@ function hoverSel() {
   stroke(0,255,0,150)
   let target1 = cellX * boardSize*boxSize/boardSize
   let target2 = (cellX+1) * boardSize*boxSize/boardSize
-  pos1 += (target1 - pos1) / 5
-  pos2 += (target2 - pos2) / 5
-  posy += (b - posy) / 5
+  pos1 += (target1 - pos1) / animationSlider.value()
+  pos2 += (target2 - pos2) / animationSlider.value()
+  posy += (b - posy) / animationSlider.value()
   strokeWeight(gridSlider.value())
   line(pos1, 0, pos1,boardHeight);
   line(pos2, 0, pos2,boardHeight);
