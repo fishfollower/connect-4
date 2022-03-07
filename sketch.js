@@ -1,14 +1,20 @@
 ///<reference path="p5.d.ts" />
-
+let gridSlider;
+let marginSlider;
+let animationSlider;
 
 let boardHeight = 400;
 let boardWidth = 400;
-let boardSize = 10;
+let boardSize = 15;
 let board = makeArr2D(boardSize,boardSize);
 let activeColor = 1;
 let b;
 
 function setup() {
+  gridSlider = createSlider(1,5,4);
+  gridSlider.position(boardHeight+20,0)
+  marginSlider = createSlider(1,20,15)
+  marginSlider.position(boardHeight+20,40)
   b = scanColForPos() * boardSize + (boardSize/2)
   createCanvas(boardWidth,boardHeight);
   console.log(board);
@@ -34,12 +40,12 @@ function makeGrid(num) {
     stroke(0,0,255);
   }
   for(let i = 0; i < boardWidth+1; i += boxSizeX) {
-    strokeWeight(5);
+    strokeWeight(gridSlider.value());
     line(i, 0, i, boardHeight);
   }
   boxSizeY = boardHeight / num;
   for(let i = 0; i < boardHeight+1; i += boxSizeY) {
-    strokeWeight(5);
+    strokeWeight(gridSlider.value());
     line(0, i, boardWidth,i);
   }
 }
@@ -66,27 +72,28 @@ function drawGrid(num) {
       if(board[i][j]) {
         if(board[i][j] == 1) { fill(255,0,0); }
         if(board[i][j] == 2) { fill(0,0,255); }
-        circle(i*boxSize+boxSize/2,j*boxSize+boxSize/2,boxSize-20);
+        circle(i*boxSize+boxSize/2,j*boxSize+boxSize/2,boxSize-marginSlider.value());
       }
     }
   }
 }
 
 function mousePressed() {
-  boxSize = boardWidth / boardSize;
-  let cellX = round(constrain(mouseX,1,boardWidth-1) / boxSize - 0.5);
-  let notFound = true;
+  if(mouseX < boardWidth && mouseY < boardHeight) {
+    boxSize = boardWidth / boardSize;
+    let cellX = round(constrain(mouseX,1,boardWidth-1) / boxSize - 0.5);
+    let notFound = true;
 
-  for(let i = boardSize-1; i >= 0 && notFound; i--) {
-    if(board[cellX][i] == 0) {
-      board[cellX][i] = activeColor;
-      notFound = false;
-      if(activeColor == 1) { activeColor = 2}
-      else { activeColor = 1}
-      isDraw();
+    for(let i = boardSize-1; i >= 0 && notFound; i--) {
+      if(board[cellX][i] == 0) {
+        board[cellX][i] = activeColor;
+        notFound = false;
+        if(activeColor == 1) { activeColor = 2}
+        else { activeColor = 1}
+        isDraw();
+      }
     }
   }
-  
 }
 
 function isDraw() {
@@ -107,21 +114,21 @@ let pos2 = 0;
 let posy = 0;
 
 function hoverSel() {
-  b = scanColForPos() * boardSize *4 + boardSize*2
+  b = scanColForPos() * boxSize+boxSize/2
   let cellX = round(constrain(mouseX,1,boardWidth-1) / boxSize - 0.5);
   print(boxSize)
   stroke(0,255,0,150)
-  let target1 = cellX * boardSize*4
-  let target2 = (cellX+1) * boardSize*4
+  let target1 = cellX * boardSize*boxSize/boardSize
+  let target2 = (cellX+1) * boardSize*boxSize/boardSize
   pos1 += (target1 - pos1) / 5
   pos2 += (target2 - pos2) / 5
   posy += (b - posy) / 5
-  strokeWeight(5)
+  strokeWeight(gridSlider.value())
   line(pos1, 0, pos1,boardHeight);
   line(pos2, 0, pos2,boardHeight);
   noStroke();
   fill(0,255,0,150)
-  circle(pos1 +boardSize*2, posy,boardSize*2)
+  circle(pos1 +boxSize/2, posy,boxSize-marginSlider.value())
   if(posy == "NaN") { posy = 1}
 }
 
