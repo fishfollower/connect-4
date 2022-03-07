@@ -12,14 +12,14 @@ let b;
 
 function setup() {
   gridSlider = createSlider(1,5,4);
-  gridSlider.position(boardHeight+20,0)
-  marginSlider = createSlider(1,20,15)
-  marginSlider.position(boardHeight+20,40)
-  animationSlider = createSlider(1,7,5)
-  animationSlider.position(boardHeight+20,80)
-  b = scanColForPos() * boardSize + (boardSize/2)
+  gridSlider.position(boardHeight+20,0);
+  marginSlider = createSlider(1,20,15);
+  marginSlider.position(boardHeight+20,40),
+  animationSlider = createSlider(1,7,5);
+  animationSlider.position(boardHeight+20,80);
+  b = scanColForPos() * boardSize + (boardSize/2),
   createCanvas(boardWidth,boardHeight);
-  console.log(board);
+  console.log(board); 
   for(let i = 0; i < boardSize ; i++) {
     for(let j = 0; j < boardSize ; j++) {
       board[i][j] = 0;
@@ -93,6 +93,10 @@ function mousePressed() {
         if(activeColor == 1) { activeColor = 2}
         else { activeColor = 1}
         isDraw();
+        let opsositeColor = 2
+        if(activeColor == 1) {opsositeColor = 2}
+        if(activeColor == 2) {opsositeColor = 1}
+        hasWon(opsositeColor,cellX,i,board);
       }
     }
   }
@@ -118,7 +122,6 @@ let posy = 0;
 function hoverSel() {
   b = scanColForPos() * boxSize+boxSize/2
   let cellX = round(constrain(mouseX,1,boardWidth-1) / boxSize - 0.5);
-  print(boxSize)
   stroke(0,255,0,150)
   let target1 = cellX * boardSize*boxSize/boardSize
   let target2 = (cellX+1) * boardSize*boxSize/boardSize
@@ -141,10 +144,63 @@ function scanColForPos() {
 
   for(let i = boardSize-1; i >= 0 && notFound; i--) {
     if(board[cellX][i] == 0) {
-      //board[cellX][i] = activeColor;
       notFound = false;
       return i;
     }
   }
   return -1;
+}
+
+function hasWon(_activeColor, _posX, _posY, _arr) {
+  let hasWon = false;
+  let checksud = [];
+  let checksrl = [];
+  let checksul = [];
+  let checksur = [];
+  for(let i = -3; i <= 3; i++) {
+    checksud.push(_arr[_posX][_posY+i])
+    checksrl.push(_arr[_posX+i][_posY])
+    checksul.push(_arr[_posX+i][_posY+i])
+    checksur.push(_arr[_posX+i][_posY-i])
+  }
+  print(checksud,checksrl,checksul,checksur)
+
+  let counterud = 1;
+  for(let i =0 ; i < checksud.length ; i++) {
+    if(checksud[i] == _activeColor) {counterud++} 
+    else {counterud = 0;}
+    if(counterud > 3) { hasWon = true}
+  }
+
+  let counterrl = 1;
+  for(let i =0 ; i < checksrl.length ; i++) {
+    if(checksrl[i] == _activeColor) {counterrl++} 
+    else {counterrl = 0;}
+    if(counterrl > 3) { hasWon = true}
+  }
+
+  let counterul = 1;
+  for(let i =0 ; i < checksul.length ; i++) {
+    if(checksul[i] == _activeColor) {counterul++} 
+    else {counterul = 0;}
+    if(counterul > 3) { hasWon = true}
+  }
+
+  let counterur = 1;
+  for(let i =0 ; i < checksur.length ; i++) {
+    if(checksur[i] == _activeColor) {counterur++} 
+    else {counterur = 0;}
+    if(counterur > 3) { hasWon = true}
+  }
+
+  print(hasWon);
+  if (hasWon) {
+    if(_activeColor == 1) {
+      createP("Red won!!!")
+    }
+    else {
+      createP("Blue won!!!")
+    }
+  }
+  
 }
