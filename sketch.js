@@ -143,7 +143,7 @@ function scanColForPos() {
     if(board[cellX][i] == 0) {
       //board[cellX][i] = activeColor;
       notFound = false;
-        return i;
+      return i;
     }
   }
   return -1;
