@@ -11,9 +11,9 @@ let activeColor = 1;
 let b;
 
 function setup() {
-  gridSlider = createSlider(1,5,4);
+  gridSlider = createSlider(1,5,2);
   gridSlider.position(boardHeight+20,0);
-  marginSlider = createSlider(1,20,15);
+  marginSlider = createSlider(1,20,5);
   marginSlider.position(boardHeight+20,40),
   animationSlider = createSlider(1,7,5);
   animationSlider.position(boardHeight+20,80);
@@ -36,11 +36,7 @@ function draw() {
 
 function makeGrid(num) {
   boxSizeX = boardWidth / num;
-  if(activeColor == 1) {
-    stroke(255,0,0);
-  } else {
-    stroke(0,0,255);
-  }
+  stroke(255);
   for(let i = 0; i < boardWidth+1; i += boxSizeX) {
     strokeWeight(gridSlider.value());
     line(i, 0, i, boardHeight);
@@ -131,8 +127,10 @@ function hoverSel() {
   strokeWeight(gridSlider.value())
   line(pos1, 0, pos1,boardHeight);
   line(pos2, 0, pos2,boardHeight);
-  noStroke();
-  fill(0,255,0,150)
+  strokeWeight(5)
+  if(activeColor == 1) {stroke(255,0,0)}
+  if(activeColor == 2) {stroke(0,0,255)}
+  noFill();
   circle(pos1 +boxSize/2, posy,boxSize-marginSlider.value())
   if(posy == "NaN") { posy = 1}
 }
