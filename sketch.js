@@ -26,7 +26,6 @@ function setup() {
     }
   }  
 }
-
 function draw() {
   background(51);
   makeGrid(boardSize);
@@ -70,6 +69,7 @@ function drawGrid(num) {
       if(board[i][j]) {
         if(board[i][j] == 1) { fill(255,0,0); }
         if(board[i][j] == 2) { fill(0,0,255); }
+        if(board[i][j] == 3) { fill(0,255,0); }
         circle(i*boxSize+boxSize/2,j*boxSize+boxSize/2,boxSize-marginSlider.value());
       }
     }
@@ -86,13 +86,11 @@ function mousePressed() {
       if(board[cellX][i] == 0) {
         board[cellX][i] = activeColor;
         notFound = false;
+        hasWon(activeColor,cellX,i,board);
         if(activeColor == 1) { activeColor = 2}
+        else if(activeColor == 2) {activeColor = 3}
         else { activeColor = 1}
         isDraw();
-        let opsositeColor = 2
-        if(activeColor == 1) {opsositeColor = 2}
-        if(activeColor == 2) {opsositeColor = 1}
-        hasWon(opsositeColor,cellX,i,board);
       }
     }
   }
@@ -130,6 +128,7 @@ function hoverSel() {
   strokeWeight(5)
   if(activeColor == 1) {stroke(255,0,0)}
   if(activeColor == 2) {stroke(0,0,255)}
+  if(activeColor == 3) {stroke(0,255,0)}
   noFill();
   circle(pos1 +boxSize/2, posy,boxSize-marginSlider.value())
   if(posy == "NaN") { posy = 1}
@@ -200,8 +199,11 @@ function hasWon(_activeColor, _posX, _posY, _arr) {
     if(_activeColor == 1) {
       createP("Red won!!!")
     }
-    else {
+    else if (_activeColor == 2) {
       createP("Blue won!!!")
+    }
+    else {
+      createP("Green won!!!")
     }
   }
   
