@@ -7,7 +7,7 @@ let boardHeight = 400;
 let boardWidth = 400;
 let boardSize = 15;
 let board = makeArr2D(boardSize,boardSize);
-let activeColor = 1;
+let activeColor = 2;
 let b;
 
 function setup() {
@@ -32,6 +32,9 @@ function draw() {
   makeGrid(boardSize);
   drawGrid(boardSize);
   hoverSel();
+  if(activeColor == 2) {
+    addPieceFI();
+  }
 }
 
 function makeGrid(num) {
@@ -48,12 +51,6 @@ function makeGrid(num) {
   }
 }
 
-function makeArr2D(rows, cols) {
-  let arr = new Array(cols);
-  for(let i = 0 ; i < arr.length ; i++) {
-    arr[i] = new Array(rows);
-  }
-}
 function makeArr2D(rows, cols) {
   let arr = new Array(cols);
   for(let i = 0 ; i < arr.length ; i++) {
@@ -80,22 +77,70 @@ function mousePressed() {
   if(mouseX < boardWidth && mouseY < boardHeight) {
     boxSize = boardWidth / boardSize;
     let cellX = round(constrain(mouseX,1,boardWidth-1) / boxSize - 0.5);
-    let notFound = true;
+    addPiece(cellX);
+    
+  }
+}
 
-    for(let i = boardSize-1; i >= 0 && notFound; i--) {
-      if(board[cellX][i] == 0) {
-        board[cellX][i] = activeColor;
+function addPiece(x) {
+  let notFound = true;
+  for(let i = boardSize-1; i >= 0 && notFound; i--) {
+    if(board[x][i] == 0) {
+      board[x][i] = activeColor;
+      notFound = false;
+      if(activeColor == 1) { activeColor = 2}
+      else { activeColor = 1}
+      isDraw();
+      let opsositeColor = 2
+      if(activeColor == 1) {opsositeColor = 2}
+      if(activeColor == 2) {opsositeColor = 1}
+      hasWon(opsositeColor,x,i,board);
+    }
+  }
+}
+
+function addPieceFI() {
+  if(activeColor != 2) {
+    return;
+  } 
+  let x = FI_v2();
+  let notFound = true;
+  for(let i = boardSize-1; i >= 0 && notFound; i--) {
+    if(board[x][i] == 0 && i != 0) {
+      
+      board[x][i] = activeColor;
+      notFound = false;
+      if(activeColor == 1) { activeColor = 2}
+      else { activeColor = 1}
+      isDraw();
+      let opsositeColor = 2
+      if(activeColor == 1) {opsositeColor = 2}
+      if(activeColor == 2) {opsositeColor = 1}
+      hasWon(opsositeColor,x,i,board);
+    }
+  }
+}
+function FI_v2() {
+  let atrativness = [];
+  for(let i = 0 ; i < boardSize ; i++) {
+    let notFound = true;
+    for(let j = boardSize-1; j >= 0 && notFound; j--) {
+      if(board[i][j] == 0) {
         notFound = false;
-        if(activeColor == 1) { activeColor = 2}
-        else { activeColor = 1}
-        isDraw();
-        let opsositeColor = 2
-        if(activeColor == 1) {opsositeColor = 2}
-        if(activeColor == 2) {opsositeColor = 1}
-        hasWon(opsositeColor,cellX,i,board);
+        atrativness.push(evalPos(activeColor,i,j,board));
       }
     }
   }
+  let highAtrativness = 0
+  let highAtrativnessIndex = 0
+  for(let i = 0 ; i < atrativness.length ; i++) {
+    if(atrativness[i]>highAtrativness) {
+      highAtrativnessIndex = i
+      highAtrativness = atrativness[i]
+    }
+  }
+  print(highAtrativness,highAtrativnessIndex)
+  return highAtrativnessIndex;
 }
 
 function isDraw() {
@@ -149,6 +194,25 @@ function scanColForPos() {
   return -1;
 }
 
+function evalPos(_activeColor, _posX, _posY, _arr) {
+  let score = 0
+  let checksud = [];
+  let checksrl = [];
+  let checksul = [];
+  let checksur = [];
+  for(let i = -4; i < 5; i++) {
+    if(_posX+i < boardSize && _posX+i >= 0 && _posY+i <= boardSize && _posY+i > 0) {checksul.push(_arr[_posX+i][_posY+i])}
+    if(_posX+i < boardSize && _posX+i >= 0 && _posY-i <= boardSize && _posY-i > 0) {checksur.push(_arr[_posX+i][_posY-i])}
+    if(_posX < boardSize && _posX >= 0 && _posY+i <= boardSize && _posY+i > 0) {checksud.push(_arr[_posX][_posY+i])}
+    if(_posX+i < boardSize && _posX+i >= 0 && _posY <= boardSize && _posY > 0) {checksrl.push(_arr[_posX+i][_posY])}
+  }
+  for(let i =0 ; i < checksud.length ; i++) {if(checksud[i] == _activeColor) {score++}}
+  for(let i =0 ; i < checksrl.length ; i++) {if(checksrl[i] == _activeColor) {score++}}
+  for(let i =0 ; i < checksul.length ; i++) {if(checksul[i] == _activeColor) {score++}}
+  for(let i =0 ; i < checksur.length ; i++) {if(checksur[i] == _activeColor) {score++}}
+  return score;
+}
+
 function hasWon(_activeColor, _posX, _posY, _arr) {
   let hasWon = false;
   let checksud = [];
@@ -165,7 +229,6 @@ function hasWon(_activeColor, _posX, _posY, _arr) {
     //checksul.push(_arr[_posX+i][_posY+i])
     //checksur.push(_arr[_posX+i][_posY-i])
   }
-  print(checksud,checksrl,checksul,checksur)
 
   let counterud = 0;
   for(let i =0 ; i < checksud.length ; i++) {
@@ -195,7 +258,6 @@ function hasWon(_activeColor, _posX, _posY, _arr) {
     if(counterur > 3) { hasWon = true}
   }
 
-  print(hasWon);
   if (hasWon) {
     if(_activeColor == 1) {
       createP("Red won!!!")
@@ -204,5 +266,4 @@ function hasWon(_activeColor, _posX, _posY, _arr) {
       createP("Blue won!!!")
     }
   }
-  
 }
