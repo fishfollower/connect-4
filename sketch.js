@@ -7,7 +7,7 @@ let boardHeight = 400;
 let boardWidth = 400;
 let boardSize = 15;
 let board = makeArr2D(boardSize,boardSize);
-let activeColor = 2;
+let activeColor = 1;
 let b;
 
 function setup() {
@@ -31,9 +31,8 @@ function draw() {
   background(51);
   makeGrid(boardSize);
   drawGrid(boardSize);
-  hoverSel();
-  if(activeColor == 2) {
-    addPieceFI();
+  if(activeColor == 1) {
+    hoverSel();
   }
 }
 
@@ -83,65 +82,26 @@ function mousePressed() {
 }
 
 function addPiece(x) {
-  let notFound = true;
-  for(let i = boardSize-1; i >= 0 && notFound; i--) {
-    if(board[x][i] == 0) {
-      board[x][i] = activeColor;
-      notFound = false;
-      if(activeColor == 1) { activeColor = 2}
-      else { activeColor = 1}
-      isDraw();
-      let opsositeColor = 2
-      if(activeColor == 1) {opsositeColor = 2}
-      if(activeColor == 2) {opsositeColor = 1}
-      hasWon(opsositeColor,x,i,board);
+  if(activeColor == 1) {
+    let notFound = true;
+    for(let i = boardSize-1; i >= 0 && notFound; i--) {
+      if(board[x][i] == 0) {
+        board[x][i] = activeColor;
+        notFound = false;
+        if(activeColor == 1) { activeColor = 2}
+        else { activeColor = 1}
+        isDraw();
+        let opsositeColor = 2
+        if(activeColor == 1) {opsositeColor = 2}
+        if(activeColor == 2) {opsositeColor = 1}
+        hasWon(opsositeColor,x,i,board);
+      }
     }
   }
 }
 
-function addPieceFI() {
-  if(activeColor != 2) {
-    return;
-  } 
-  let x = FI_v2();
-  let notFound = true;
-  for(let i = boardSize-1; i >= 0 && notFound; i--) {
-    if(board[x][i] == 0 && i != 0) {
-      
-      board[x][i] = activeColor;
-      notFound = false;
-      if(activeColor == 1) { activeColor = 2}
-      else { activeColor = 1}
-      isDraw();
-      let opsositeColor = 2
-      if(activeColor == 1) {opsositeColor = 2}
-      if(activeColor == 2) {opsositeColor = 1}
-      hasWon(opsositeColor,x,i,board);
-    }
-  }
-}
-function FI_v2() {
-  let atrativness = [];
-  for(let i = 0 ; i < boardSize ; i++) {
-    let notFound = true;
-    for(let j = boardSize-1; j >= 0 && notFound; j--) {
-      if(board[i][j] == 0) {
-        notFound = false;
-        atrativness.push(evalPos(activeColor,i,j,board));
-      }
-    }
-  }
-  let highAtrativness = 0
-  let highAtrativnessIndex = 0
-  for(let i = 0 ; i < atrativness.length ; i++) {
-    if(atrativness[i]>highAtrativness) {
-      highAtrativnessIndex = i
-      highAtrativness = atrativness[i]
-    }
-  }
-  print(highAtrativness,highAtrativnessIndex)
-  return highAtrativnessIndex;
-}
+
+
 
 function isDraw() {
   let count = 0;
