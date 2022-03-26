@@ -39,7 +39,32 @@ function draw() {
 }
 
 function AI() {
-  return round(random(15))
+  let evaledPoses = [];
+  for(let x = 0; x < boardSize; x++) {
+    let notFound = true;
+    for(let i = boardSize-1; i >= 0 && notFound; i--) {
+      if(board[x][i] == 0) {
+        let opsositeColor
+        if(activeColor == 1) {opsositeColor = 2}
+        if(activeColor == 2) {opsositeColor = 1}
+        
+        evaledPoses.push(evalPos(opsositeColor,x,i,board))
+        //print(evalPos(activeColor,x,i,board))
+        //print(i);
+        notFound = false;
+      }
+    }
+  }
+  print(evaledPoses)
+  let hiScore = 0
+  let hiScoreI = 0
+  for(let i = 0; i <= evaledPoses.length; i++) {
+    if(evaledPoses[i] > hiScore) {
+      hiScore = evaledPoses[i]
+      hiScoreI = i
+    }
+  }
+  return hiScoreI
 }
 
 function makeGrid(num) {
@@ -180,22 +205,30 @@ function scanColForPos() {
 }
 
 function evalPos(_activeColor, _posX, _posY, _arr) {
-  let score = 0
+  let scoreud = 0
+  let scorerl = 0
+  let scoreul = 0
+  let scoreur = 0
   let checksud = [];
   let checksrl = [];
   let checksul = [];
   let checksur = [];
-  for(let i = -4; i < 5; i++) {
+  for(let i = -3; i < 4; i++) {
     if(_posX+i < boardSize && _posX+i >= 0 && _posY+i <= boardSize && _posY+i > 0) {checksul.push(_arr[_posX+i][_posY+i])}
     if(_posX+i < boardSize && _posX+i >= 0 && _posY-i <= boardSize && _posY-i > 0) {checksur.push(_arr[_posX+i][_posY-i])}
     if(_posX < boardSize && _posX >= 0 && _posY+i <= boardSize && _posY+i > 0) {checksud.push(_arr[_posX][_posY+i])}
     if(_posX+i < boardSize && _posX+i >= 0 && _posY <= boardSize && _posY > 0) {checksrl.push(_arr[_posX+i][_posY])}
   }
-  for(let i =0 ; i < checksud.length ; i++) {if(checksud[i] == _activeColor) {score++}}
-  for(let i =0 ; i < checksrl.length ; i++) {if(checksrl[i] == _activeColor) {score++}}
-  for(let i =0 ; i < checksul.length ; i++) {if(checksul[i] == _activeColor) {score++}}
-  for(let i =0 ; i < checksur.length ; i++) {if(checksur[i] == _activeColor) {score++}}
-  return score;
+  for(let i =0 ; i < checksud.length ; i++) {if(checksud[i] == _activeColor) {scoreud++}}
+  for(let i =0 ; i < checksrl.length ; i++) {if(checksrl[i] == _activeColor) {scorerl++}}
+  for(let i =0 ; i < checksul.length ; i++) {if(checksul[i] == _activeColor) {scoreul++}}
+  for(let i =0 ; i < checksur.length ; i++) {if(checksur[i] == _activeColor) {scoreur++}}
+  //return score;
+  if(scoreud > scorerl && scoreud > scoreul && scoreud > scoreur) {return scoreud}
+  if(scorerl > scoreud && scorerl > scoreul && scorerl > scoreur) {return scorerl}
+  if(scoreul > scorerl && scoreul > scoreud && scoreul > scoreur) {return scoreul}
+  if(scoreur > scorerl && scoreur > scoreul && scoreur > scoreud) {return scoreur}
+  return round((scoreud+scorerl+scoreul+scoreur)/4)
 }
 
 function hasWon(_activeColor, _posX, _posY, _arr) {
