@@ -33,7 +33,13 @@ function draw() {
   drawGrid(boardSize);
   if(activeColor == 1) {
     hoverSel();
+  } else {
+    addPieceAI(AI());
   }
+}
+
+function AI() {
+  return round(random(15))
 }
 
 function makeGrid(num) {
@@ -83,6 +89,25 @@ function mousePressed() {
 
 function addPiece(x) {
   if(activeColor == 1) {
+    let notFound = true;
+    for(let i = boardSize-1; i >= 0 && notFound; i--) {
+      if(board[x][i] == 0) {
+        board[x][i] = activeColor;
+        notFound = false;
+        if(activeColor == 1) { activeColor = 2}
+        else { activeColor = 1}
+        isDraw();
+        let opsositeColor = 2
+        if(activeColor == 1) {opsositeColor = 2}
+        if(activeColor == 2) {opsositeColor = 1}
+        hasWon(opsositeColor,x,i,board);
+      }
+    }
+  }
+}
+
+function addPieceAI(x) {
+  if(activeColor == 2) {
     let notFound = true;
     for(let i = boardSize-1; i >= 0 && notFound; i--) {
       if(board[x][i] == 0) {
@@ -220,10 +245,10 @@ function hasWon(_activeColor, _posX, _posY, _arr) {
 
   if (hasWon) {
     if(_activeColor == 1) {
-      createP("Red won!!!")
+      createP("You won!!!")
     }
     else {
-      createP("Blue won!!!")
+      createP("AI won!!!")
     }
   }
 }
